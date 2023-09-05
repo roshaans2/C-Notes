@@ -1,0 +1,28 @@
+Generalization in templates refers to creating a template that can work with a broad range of data types without specifying a particular data type.
+
+template <typename T>
+T findMin(const T* arr, size_t size) {
+    T minVal = arr[0];
+    for (size_t i = 1; i < size; ++i) {
+        if (arr[i] < minVal) {
+            minVal = arr[i];
+        }
+    }
+    return minVal;
+}
+
+Specialization in templates involves providing custom implementations for specific data types while using the generic template for others. It allows you to optimize or adapt code for particular data types.
+
+template <>
+Complex findMin<Complex>(const Complex* arr, size_t size) {
+    Complex minVal = arr[0];
+    for (size_t i = 1; i < size; ++i) {
+        if (arr[i].magnitude() < minVal.magnitude()) {
+            minVal = arr[i];
+        }
+    }
+    return minVal;
+}
+
+Generalization uses template parameters like <typename T> to create generic templates.
+Specialization uses the template <> syntax to provide custom implementations for specific data types.

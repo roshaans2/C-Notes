@@ -1,0 +1,12 @@
+These are Datatype size in 32 bit systems
+
+Integer - 4 bytes
+Unsigned int - 4 bytes
+Float - 4 bytes
+Double - 8 bytes
+Character - 1 bytes
+bool - 1 bytes
+short - 2 bytes
+long - 8 bytes
+long long - 8 bytes
+long double - 16 bytes

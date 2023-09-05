@@ -1,0 +1,18 @@
+Compile time error - 
+
+something wrong with the structure
+something wrong with the meaning
+
+Linker Errors - 
+
+The linker is having trouble linking all the object files together to create an executable. Usually there is a library or object file that is missing.
+
+Runtime Errors - 
+
+Divide by Zero
+File not found
+Out of Memory
+
+Logical Error - 
+
+Mistake made by the programmer

@@ -1,0 +1,66 @@
+The following operators cannot be overloaded.
+::, :?, .*, ., sizeof
+
+#include<iostream>
+using namespace std;
+
+class One{
+    private:
+       int n;
+    public:
+        One(){
+            
+        }
+        One(int num){
+           n = num;
+        }
+        void getData(){
+            cout<<n<<endl;
+        }
+        One operator+(One &p){
+            One res;
+            res.n = n+p.n;
+            return res;
+        }
+};
+
+int main(){
+    One n1{2};
+    One n2{3};
+    n1.getData();
+    n2.getData();
+    One n3 = n1+n2;
+    n3.getData();
+}
+
+
+#include<iostream>
+using namespace std;
+
+class Student{
+    private:
+        int maths;
+        int science;
+        
+    public:
+        Student(int m,int s){
+            maths = m;
+            science = s;
+        }
+        void getData(){
+           cout<<maths<<endl;
+           cout<<science<<endl;
+        }
+        void operator=(const Student &s){
+            maths = s.maths;
+            science = s.science;
+        }
+};
+
+int main(){
+    Student s1{95,94};
+    Student s2{95,95};
+    s2.getData();
+    s2 = s1;
+    s2.getData();
+}

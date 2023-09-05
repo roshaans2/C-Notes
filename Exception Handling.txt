@@ -1,0 +1,475 @@
+#include<iostream>
+using namespace std;
+
+int main(){
+    int miles;
+    int gallons;
+    double miles_per_gallon;
+    cin>>miles;
+    cin>>gallons;
+    
+    try{
+        if(gallons == 0){
+            throw 0;
+        }
+        miles_per_gallon = static_cast<double>(miles)/gallons;
+        cout<<miles_per_gallon<<endl;
+    }
+    catch(int &ex){
+        cout<<"Divide by zero error"<<endl;
+    }
+    
+}
+
+
+#include<iostream>
+using namespace std;
+
+double calculate_avg(int sum,int total){
+    
+    if(total == 0){
+        throw 0;
+    }
+    
+    return static_cast<double>(sum)/total;
+}
+
+int main(){
+    int sum;
+    int total;
+    cin>>sum;
+    cin>>total;
+    
+    try{
+        double avg = calculate_avg(sum,total);
+        cout<<avg<<endl;
+    }
+    catch(int &ex){
+        cout<<"Divide by zero exception"<<endl;
+    }
+}
+
+
+#include<iostream>
+using namespace std;
+
+double calculate_avg(int sum,int total){
+    if(total == 0){
+        throw 0;
+    }
+    if(sum <0 || total < 0){
+        throw string{"Negative value exception"};
+    }
+    return static_cast<double>(sum)/total;
+}
+
+int main(){
+    int sum;
+    int total;
+    cin>>sum;
+    cin>>total;
+    try{
+        double avg = calculate_avg(sum,total);
+        cout<<avg<<endl;
+    }
+    catch(int &ex){
+        cout<<"Divide by zero exception"<<endl;
+    }
+    catch(string &ex){
+        cout<<ex<<endl;
+    }
+}
+
+The below syntax is used to catch unknown exception
+
+catch(...){
+}
+
+Creating user defined exception classes
+
+#include<iostream>
+using namespace std;
+
+
+class DivideByZeroException{
+    
+};
+
+class NegativeValueException{
+    
+};
+
+double calculate_avg(int sum,int total){
+    if(total == 0){
+        throw DivideByZeroException();
+    }
+    if(sum <0 || total < 0){
+        throw NegativeValueException();
+    }
+    return static_cast<double>(sum)/total;
+}
+
+int main(){
+    int sum;
+    int total;
+    cin>>sum;
+    cin>>total;
+    try{
+        double avg = calculate_avg(sum,total);
+        cout<<avg<<endl;
+    }
+    catch(const DivideByZeroException &ex){
+        cout<<"Divide by zero exception"<<endl;
+    }
+    catch(const NegativeValueException &ex){
+        cout<<"Negative value exception"<<endl;
+    }
+}
+
+output - 
+
+15 -5
+Negative value exception
+
+
+try,throw,catch are important keywords in Exception handling
+
+try - Contains error causing program
+throw- throws some value when error is occured.
+catch - catches the value thrown by throw keyword
+
+#include<iostream>
+using namespace std;
+
+int main(){
+    try{
+        cout<<"Before throw\n";
+        throw 1;
+        cout<<"After throw";
+    }
+    catch(char x){
+        cout<<x<<" is printed\n";
+    }
+    cout<<"Thank you";
+}
+
+The above program gives a error
+
+The output would be,
+
+Before throw
+terminate called after throwing an instance of 'int'
+
+To solve this, we use catch(...) -> 
+
+#include<iostream>
+using namespace std;
+
+int main(){
+    try{
+        cout<<"Before throw\n";
+        throw 1;
+        cout<<"After throw";
+    }
+    // catch(char x){
+    //     cout<<x<<" is printed\n";
+    // }
+    catch(...){
+        cout<<"Exception is thrown\n";
+    }
+    cout<<"Thank you";
+}
+
+Try block without catch block
+
+#include<iostream>
+using namespace std;
+
+int main(){
+    try{
+        throw 10;
+    }
+}
+
+We will get error for the above program
+
+
+Exception Handling with Classes - 
+
+#include<iostream>
+using namespace std;
+
+class Test{
+    public:
+        Test(){
+            cout<<"I am constructor\n";
+        }
+        ~Test(){
+            cout<<"I am destructor\n";
+        }
+};
+
+int main(){
+    try{
+        cout<<"Welcome to exception handling in classes\n";
+        Test t;
+        throw 10;
+        cout<<"Testing destructor\n";
+    }
+    catch(...){
+        cout<<"Thank you\n";
+    }
+}
+
+
+output - 
+
+Welcome to exception handling in classes
+I am constructor
+I am destructor
+Thank you
+
+
+Whenever an exception is thrown, then the object created within try block is destroyed and it's destructor is called.
+
+
+
+
+Rethrowing an exception - 
+
+#include <iostream>
+#include <stdexcept>
+
+void foo() {
+    try {
+        // Code that might throw an exception
+        throw std::runtime_error("An error occurred in foo()");
+    }
+    catch (const std::exception& e) {
+        std::cout << "Exception caught in foo(): " << e.what() << std::endl;
+        
+        // Rethrow the exception
+        throw; // Exception continues to propagate
+    }
+}
+
+int main() {
+    try {
+        foo();
+    }
+    catch (const std::exception& e) {
+        std::cout << "Exception caught in main(): " << e.what() << std::endl;
+    }
+
+    return 0;
+}
+
+output - 
+
+Exception caught in foo(): An error occurred in foo()
+Exception caught in main(): An error occurred in foo()
+
+
+Custom Exceptions - 
+
+#include <stdexcept>
+#include <string>
+
+class MyException : public std::runtime_error {
+public:
+    MyException(const std::string& message)
+        : std::runtime_error(message) {}
+};
+
+void someFunction() {
+    // ... Some code ...
+    if (/* Some condition */) {
+        throw MyException("An error occurred in someFunction()");
+    }
+    // ... More code ...
+}
+
+try {
+    someFunction();
+}
+catch (const MyException& e) {
+    // Handle the custom exception
+    std::cerr << "Custom exception caught: " << e.what() << std::endl;
+}
+
+
+Restricting Exceptions - the throw list
+
+
+In C++, you can restrict the types of exceptions that a function can throw by specifying a throw list. The throw list, also known as an exception specification, is a way to declare which types of exceptions a function is allowed to throw. It's specified in the function declaration, indicating the allowable exception types.
+
+returnType functionName(parameters) throw (exceptionType1, exceptionType2, ...);
+
+
+int divide(int a, int b) throw (std::runtime_error) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero is not allowed.");
+    }
+    return a / b;
+}
+
+
+#include <iostream>
+#include <stdexcept>
+#include <cstdlib>
+
+void functionWithThrowList() throw (std::runtime_error) {
+    // This function is allowed to throw std::runtime_error.
+    throw std::logic_error("This exception is not allowed.");
+}
+
+int main() {
+    std::set_unexpected([] {
+        std::cerr << "Custom unexpected handler called." << std::endl;
+        std::abort(); // Terminate the program
+    });
+
+    try {
+        functionWithThrowList();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+
+    std::cout << "Program continues after exception handling." << std::endl;
+
+    return 0;
+}
+
+In C++, the std::unexpected() function is called by default if an exception occurs that is not listed in a function's exception specification (throw list) and if a custom unexpected handler has not been defined using std::set_unexpected().
+
+However, the default behavior of std::unexpected() is to call std::terminate(), which results in the program being terminated abruptly without any further cleanup or unwinding of the call stack.
+
+
+Handling Derived class Exception - 
+
+// C++ Program to demonstrate a
+// Catching Base Exception
+#include <iostream>
+using namespace std;
+
+class Base {
+};
+class Derived : public Base {
+};
+int main()
+{
+	Derived d;
+	// Some other functionalities
+	try {
+		// Monitored code
+		throw d;
+	}
+	catch (Base b) {
+		cout << "Caught Base Exception";
+	}
+	catch (Derived d) {
+		// This 'catch' block is NEVER executed
+		cout << "Caught Derived Exception";
+	}
+	getchar();
+	return 0;
+}
+
+output - 
+
+Caught Base Exception
+
+// C++ Program to demonstrate a catching of
+// Derived exception and printing it successfully
+#include <iostream>
+using namespace std;
+
+class Base {};
+class Derived : public Base {};
+int main()
+{
+	Derived d;
+	// Some other functionalities
+	try {
+		// Monitored code
+		throw d;
+	}
+	catch (Derived d) {
+		cout << "Caught Derived Exception";
+	}
+	catch (Base b) {
+		cout << "Caught Base Exception";
+	}
+	getchar(); // To read the next character
+	return 0;
+}
+
+
+output - 
+Caught Derived Exception
+
+#include <iostream>
+#include <exception>
+using namespace std;
+
+class BaseException : public exception {
+public:
+	virtual const char* what() const throw() {
+		return "Base exception";
+	}
+};
+
+class DerivedException : public BaseException {
+public:
+	virtual const char* what() const throw() {
+		return "Derived exception";
+	}
+};
+
+int main() {
+	try {
+		// code that might throw exceptions
+		throw DerivedException();
+	} catch (BaseException& e) {
+		cout << "Caught exception: " << e.what() << endl;
+	}
+	return 0;
+}
+
+Caught exception: Derived exception
+
+
+Setting the terminate and unexpected handlers - 
+
+void myTerminateHandler() {
+    std::cerr << "Custom terminate handler called." << std::endl;
+    // Perform cleanup or other actions as needed
+    std::abort(); // Terminate the program
+}
+
+int main() {
+    std::set_terminate(myTerminateHandler);
+
+    // Rest of the program
+    return 0;
+}
+
+
+void myUnexpectedHandler() {
+    std::cerr << "Custom unexpected handler called." << std::endl;
+    // Perform custom handling or throw an exception
+    throw MyCustomException("Unexpected exception");
+}
+
+int main() {
+    std::set_unexpected(myUnexpectedHandler);
+
+    // Rest of the program
+    return 0;
+}
+
+If neither handler is set, the default behavior is to call std::abort(), which terminates the program without cleanup or further exception handling.
+
+
+

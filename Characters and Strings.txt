@@ -1,0 +1,42 @@
+char my_name[] = "Frank";
+my_name[5] = 'y'; //Problem
+
+
+char my_name[8] = "Frank";
+my_name[5] = 'y'; //OK
+
+char my_name[8];
+my_name = "Frank"; //Error
+strcpy(my_name,"Frank"); //OK
+
+cin.getline(full_name,50);
+
+C++ Strings - 
+
+string s1 {"Frank",0,2}; //Fra
+string s2 (3,'X'); //XXX
+
+string s1 {"This is a test"};
+
+cout<<s1.substr(0,4); //This
+cout<<s1.substr(5,2); //is
+cout<<s1.substr(10,4); //test
+
+
+cout<<s1.find("This");  //0
+cout<<s1.find("is");    //2
+cout<<s1.find("test");  //10
+cout<<s1.find('e');     //11
+cout<<s1.find("is",4);  //5
+cout<<s1.find("XX");    //string::npos
+
+object.erase(start_index,length)
+
+cout<<s1.erase(0,5); //is a test
+s1.clear();  //empties string
+
+
+getline(cin,s1);
+
+getline(cin,s1,'x'); //this isx
+cout<<s1<<endl; //this is

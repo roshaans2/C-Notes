@@ -1,0 +1,105 @@
+In-built function in cmath - 
+
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+int main(){
+    int num = 5.23;
+    cout<<cbrt(num)<<endl;
+    cout<<floor(num)<<endl;
+    cout<<ceil(num)<<endl;
+    cout<<sqrt(num)<<endl;
+    cout<<sin(num)<<endl;
+    cout<<round(num)<<endl;
+}
+
+Pass by value - 
+
+When you pass data into a function it is passed-by-value.
+A copy of data is passed to the function
+Whatever changes you make to the parameter in thefunction does not affect the argument that was passed in.
+
+Formal Parameter - The parameters defined in the function header.
+Actual Parameter - The parameters used in the function call.
+
+
+void param_test(int formal){
+    cout<<formal<<endl; //50
+    formal = 100; 
+    cout<<formal<<endl; //100
+}
+
+int main(){
+    int actual{50};  
+    cout<<actual<<endl; //50
+    param_test(actual); 
+    cout<<actual<<endl; //50
+    return 0;
+}
+
+
+Overloading functions - 
+
+int get_value();
+double get_value();
+
+//Error
+
+cout<<get_value()<<endl; //Which one?
+
+
+#include<iostream>
+using namespace std;
+
+void print_array(int numbers[],size_t size){
+    for(size_t i=0;i<size;i++){
+        cout<<numbers[i]<<" ";
+    }
+}
+
+void zero_array(int numbers[],int size,int a){
+    for(int i=0;i<size;i++){
+        numbers[i] = 0;
+    }
+    a = 0;
+}
+
+int main(){
+    int my_numbers[] = {1,2,3,4,5};
+    int a = 2;
+    zero_array(my_numbers,5,a);
+    print_array(my_numbers,5);
+    cout<<a;
+    return 0;
+}
+
+Output - 
+0 0 0 0 0 2
+
+Since, we are passing location of the array the function can modify actual array. It is not applicable for normal variable.
+
+
+void print_array(const int numbers[],size_t size){
+    for(size_t i=0;i<size;i++){
+        cout<<numbers[i];
+        numbers[i] = 0; //Const array cannot be modified
+    }
+}
+
+
+Inline functions - 
+
+Avoid function call overhead
+generate inline assembly code
+faster
+
+inline int add_numbers(int a,int b){
+    return a+b;
+}
+
+int main(){
+    int result{0};
+    result = add_numbers(100,200);
+    resturn 0;
+}

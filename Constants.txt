@@ -1,0 +1,15 @@
+\n - newline
+\r - return
+\t - tab
+\b - backspace
+\' - single quote
+\" - double quote
+\\ - backslask
+
+Given the following array declaration, what would the following code display? 
+
+double temperatures[] {98.6, 95.2, 88.7, 100.7, 89.0}; 
+cout << temperatures[5] << endl;
+
+garbage data
+

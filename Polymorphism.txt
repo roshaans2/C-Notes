@@ -1,0 +1,695 @@
+Compile time polymorphism - Function overloading, Operator overloading
+
+Run time polymorphism - Overriding
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+        void say_hello(){
+            cout<<"Hello from Base class"<<endl;
+        }
+};
+
+class Derived:public Base{
+    public:
+        void say_hello(){
+            cout<<"Hello from derived class"<<endl;
+        }
+};
+
+void greetings(Base &obj){
+    obj.say_hello();
+}
+
+
+
+int main(){
+    Base b;
+    b.say_hello();
+    
+    Derived d;
+    d.say_hello();
+    
+    greetings(b);
+    greetings(d);
+    
+    Base *ptr = new Derived();
+    ptr->say_hello(); 
+
+    //This will invoke base class function even though new Derived() is used due to Base *ptr;
+    
+    return 0;
+}
+
+
+output - 
+
+Hello from Base class
+Hello from derived class
+Hello from Base class
+Hello from Base class
+Hello from Base class
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+class Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Account::withdraw"<<endl;
+        }
+};
+
+class Checking:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Checking::withdraw"<<endl;
+        }
+};
+
+class Savings:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Savings::withdraw"<<endl;
+        }
+};
+
+class Trust:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Trust::withdraw"<<endl;
+        }
+};
+
+int main(){
+    Account *p1 = new Account();
+    Account *p2 = new Savings();
+    Account *p3 = new Checking();
+    Account *p4 = new Trust();
+    
+    p1->withdraw(1000);
+    p2->withdraw(1000);
+    p3->withdraw(1000);
+    p4->withdraw(1000);
+    
+    Account *array[] = {p1,p2,p3,p4};
+    for(auto i=0;i<4;i++){
+        array[i]->withdraw(1000);
+    }
+    
+    
+    vector<Account*>accounts{p1,p2,p3,p4};
+    for(auto acc_ptr:accounts){
+        acc_ptr->withdraw(1000);
+    }
+    
+    
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p4;
+}
+output - 
+
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+Account::withdraw
+
+
+
+To solve this we bring the concept of virtual function
+
+Virtual functions are overriden.
+Virtual functions are dynamically bound.
+
+By including virtual functions in above code we can achieve dynamic binding
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+class Account{
+    public:
+        virtual void withdraw(int amount){
+            cout<<"Account::withdraw"<<endl;
+        }
+};
+
+class Checking:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Checking::withdraw"<<endl;
+        }
+};
+
+class Savings:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Savings::withdraw"<<endl;
+        }
+};
+
+class Trust:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Trust::withdraw"<<endl;
+        }
+};
+
+int main(){
+    Account *p1 = new Account();
+    Account *p2 = new Savings();
+    Account *p3 = new Checking();
+    Account *p4 = new Trust();
+    
+    p1->withdraw(1000);
+    p2->withdraw(1000);
+    p3->withdraw(1000);
+    p4->withdraw(1000);
+    
+    Account *array[] = {p1,p2,p3,p4};
+    for(auto i=0;i<4;i++){
+        array[i]->withdraw(1000);
+    }
+    
+    
+    vector<Account*>accounts{p1,p2,p3,p4};
+    for(auto acc_ptr:accounts){
+        acc_ptr->withdraw(1000);
+    }
+    
+    
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p4;
+}
+
+Account::withdraw
+Savings::withdraw
+Checking::withdraw
+Trust::withdraw
+Account::withdraw
+Savings::withdraw
+Checking::withdraw
+Trust::withdraw
+Account::withdraw
+Savings::withdraw
+Checking::withdraw
+Trust::withdraw
+
+Virtual destructors - 
+
+If a class has virtual function it must always provide a virtual destructor.
+
+using a normal destructor - 
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+class Account{
+    public:
+        virtual void withdraw(int amount){
+            cout<<"Account::withdraw"<<endl;
+        }
+        ~Account(){
+            cout<<"Account::destructor"<<endl;
+        }
+};
+
+class Checking:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Checking::withdraw"<<endl;
+        }
+        ~Checking(){
+            cout<<"Checking::destructor"<<endl;
+        }
+};
+
+class Savings:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Savings::withdraw"<<endl;
+        }
+        ~Savings(){
+            cout<<"Savings::destructor"<<endl;
+        }
+};
+
+class Trust:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Trust::withdraw"<<endl;
+        }
+        ~Trust(){
+            cout<<"Trust::destructor"<<endl;
+        }
+};
+
+int main(){
+    Account *p1 = new Account();
+    Account *p2 = new Savings();
+    Account *p3 = new Checking();
+    Account *p4 = new Trust();
+    
+    p1->withdraw(1000);
+    p2->withdraw(1000);
+    p3->withdraw(1000);
+    p4->withdraw(1000);
+    
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p4;
+}
+
+output - 
+
+Account::withdraw
+Savings::withdraw
+Checking::withdraw
+Trust::withdraw
+Account::destructor
+Account::destructor
+Account::destructor
+Account::destructor
+
+After adding virtual keyword to destructor - 
+
+#include<iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+class Account{
+    public:
+        virtual void withdraw(int amount){
+            cout<<"Account::withdraw"<<endl;
+        }
+        virtual ~Account(){
+            cout<<"Account::destructor"<<endl;
+        }
+};
+
+class Checking:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Checking::withdraw"<<endl;
+        }
+        ~Checking(){
+            cout<<"Checking::destructor"<<endl;
+        }
+};
+
+class Savings:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Savings::withdraw"<<endl;
+        }
+        ~Savings(){
+            cout<<"Savings::destructor"<<endl;
+        }
+};
+
+class Trust:public Account{
+    public:
+        void withdraw(int amount){
+            cout<<"Trust::withdraw"<<endl;
+        }
+        ~Trust(){
+            cout<<"Trust::destructor"<<endl;
+        }
+};
+
+int main(){
+    Account *p1 = new Account();
+    Account *p2 = new Savings();
+    Account *p3 = new Checking();
+    Account *p4 = new Trust();
+    
+    p1->withdraw(1000);
+    p2->withdraw(1000);
+    p3->withdraw(1000);
+    p4->withdraw(1000);
+    delete p1;
+    delete p2;
+    delete p3;
+    delete p4;
+}
+
+output - 
+
+Account::withdraw
+Savings::withdraw
+Checking::withdraw
+Trust::withdraw
+Account::destructor
+Savings::destructor
+Account::destructor
+Checking::destructor
+Account::destructor
+Trust::destructor
+Account::destructor
+
+Derived class destructor is called followed by base class destructor
+
+The override specifier - 
+
+The function definition and return must be exactly same.
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+        virtual void say_hello() const{
+            cout<<"Hello from Base class"<<endl;
+        }
+        virtual ~Base(){}
+};
+
+class Derived:public Base{
+    public:
+        //Here const is missing, so it is not overriding due to different signatures of function
+        void say_hello(){
+            cout<<"Hello from Derived class"<<endl;
+        }
+        virtual ~Derived(){}
+};
+
+int main(){
+    Base *p1 = new Base();
+    p1->say_hello();
+    Base *p2 = new Derived();
+    p2->say_hello();
+}
+
+output - 
+
+Hello from Base class
+Hello from Base class
+
+say_hello method signatures are different.
+So Derived redefines say_hello instead of overriding it
+
+
+We can use explicit override keyword
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+        virtual void say_hello() const{
+            cout<<"Hello from Base class"<<endl;
+        }
+        virtual ~Base(){}
+};
+
+class Derived:public Base{
+    public:
+        void say_hello() const override{
+            cout<<"Hello from Derived class"<<endl;
+        }
+        virtual ~Derived(){}
+};
+
+int main(){
+    Base *p1 = new Base();
+    p1->say_hello();
+    Base *p2 = new Derived();
+    p2->say_hello();
+}
+
+Hello from Base class
+Hello from Derived class
+
+
+A complete example - 
+
+// Dog.h
+
+#ifndef DOG_H
+#define DOG_H
+
+#include "Animal.h"
+
+class Dog : public Animal {  // Inheritance Dog is-an Animal
+public:
+    // Be sure to call the Animal constructor from the Dog constuctor
+    Dog(const std::string& name, int age) : Animal(name, age) {}
+    std::string get_noise() override;
+    int get_num_legs() override;
+};
+
+#endif /* DOG_H */
+
+
+// Dog.cpp
+
+#include "Dog.h"
+
+// Implement Dog::get_noise()
+std::string Dog::get_noise() {
+    return "Woof";
+}
+
+// Implement Dog::get_num_legs()
+int Dog::get_num_legs() {
+    return 4;
+}
+
+Calling Derived class constructor from Base class constructor
+
+class Base {
+public:
+    Base(int value) {
+        // Base class constructor code
+    }
+};
+
+class Derived : public Base {
+public:
+    Derived(int derivedValue, int baseValue) : Base(baseValue) {
+        // Derived class constructor code
+    }
+};
+
+
+Final specifier - 
+
+When used at the class level, prevents a class from being derived from
+
+When used at the method level, prevents virtual method from being overriden in derived class.
+
+class A{
+    public:
+        virtual void do_something();
+};
+
+class B:public A{
+    public:
+        void do_something() final; prevent further overriding
+};
+
+class C:public B{
+       void do_something(); //COMPILE ERROR
+}
+
+
+If a method in base class is virtual, then the method in derived class that overrides it is also virtual.
+
+Polymorphism using base class references
+
+#include <iostream>
+
+class Shape {
+public:
+    virtual void draw() {
+        std::cout << "Drawing a shape." << std::endl;
+    }
+};
+
+class Circle : public Shape {
+public:
+    void draw() override {
+        std::cout << "Drawing a circle." << std::endl;
+    }
+};
+
+class Square : public Shape {
+public:
+    void draw() override {
+        std::cout << "Drawing a square." << std::endl;
+    }
+};
+
+int main() {
+    Circle circle;
+    Square square;
+
+    // Polymorphism using base class references
+    Shape& shapeRef1 = circle;
+    Shape& shapeRef2 = square;
+
+    shapeRef1.draw();  // Calls the draw() function of Circle
+    shapeRef2.draw();  // Calls the draw() function of Square
+
+    return 0;
+}
+
+Abstract classes - 
+
+Cannot instantiate objects
+These classes are used as base class in inheritence
+constains atleast one pure virtual function
+
+Pure virtual function - 
+It is used to make a class abstract
+Specified with "=0" in its declaration
+
+virtual void function() = 0; //pure virtual function
+Typically do not provide implementation
+Derived class must override the base class.
+If the Derived class does not override then the Derived class is also abstract.
+
+class Shape{
+    public:
+        virtual void draw() = 0; //Pure virtual function
+        virtual void rotate() = 0; //Pure virtual function
+        virtual ~Shape();
+};
+
+class Circle:public Shape{
+    public:
+        void draw(){
+        }
+        void rotate(){
+        }
+        virtual ~Circle();
+};
+
+Shape shape; //Error
+Shape *ptr = new Shape(); //Error
+
+We can use pointer and references to dynamically refer to classes derived from them.
+
+
+Shape *ptr = new Circle();
+ptr->draw();
+ptr->rotate();
+
+
+classes with only pure virtual functions are often used in C++ as interface classes.
+
+
+
+
+
+Late Binding vs Early Binding - 
+
+Late Binding or Dynamic Binding - 
+
+class Base {
+public:
+    virtual void show() {
+        std::cout << "Base class" << std::endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    void show() override {
+        std::cout << "Derived class" << std::endl;
+    }
+};
+
+int main() {
+    Base* basePtr;
+    Derived derivedObj;
+
+    basePtr = &derivedObj;
+    basePtr->show(); // Calls Derived's show() at runtime
+    return 0;
+}
+
+Early Binding or Static Binding - 
+
+class Base {
+public:
+    void show() {
+        std::cout << "Base class" << std::endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    void show() {
+        std::cout << "Derived class" << std::endl;
+    }
+};
+
+int main() {
+    Base* basePtr;
+    Derived derivedObj;
+
+    basePtr = &derivedObj;
+    basePtr->show(); // Calls Base's show() at compile time
+    return 0;
+}
+
+
+In a situation where both dynamic binding and early binding are possible, which one is chosen by C++?
+
+Early binding
+
+
+
+Pure Virtual Functions - 
+
+1. Abstract Base Classes:
+
+A class that contains one or more pure virtual functions is known as an abstract base class.
+Abstract base classes cannot be instantiated. They serve as blueprints for derived classes.
+
+Derived classes inheriting from an abstract base class must provide their own implementations for all pure virtual functions.
+Failure to provide implementations in derived classes results in compilation errors.
+
+Need for Virtual Destructors:
+
+When working with polymorphism, where you have base class pointers pointing to derived class objects, it's crucial to ensure that the correct destructor is called when deleting objects.
+Without a virtual destructor in the base class, only the base class destructor would be called, leading to resource leaks and undefined behavior in derived classes.
+
+
+class Base {
+public:
+    virtual ~Base() {
+        std::cout << "Base destructor" << std::endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    ~Derived() {
+        std::cout << "Derived destructor" << std::endl;
+    }
+};
+
+int main() {
+    Base* basePtr = new Derived();
+    delete basePtr; // Calls Derived's destructor due to virtual destructor
+    return 0;
+}

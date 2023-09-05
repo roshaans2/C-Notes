@@ -1,0 +1,35 @@
+Basic Components
+Preprocessor Directives
+The main function
+namespaces
+comments
+Basic I/O
+
+Preprocessor - 
+
+It processes source code before the compiler sees it. It replaces each comment with a single space. Then, it looks for preprocessor directives and execute them. The C++ preprocessor does not understand C++. It simply follows the preprocessor directive and makes the source code ready for the compiler.
+
+
+Comments - 
+
+//This is a single line comment
+/* This is
+   a 
+   multiline comment
+*/
+
+/********************
+* This is also a comment used to display information
+*
+*
+*
+********************/
+
+
+Namespaces - 
+
+std is the name for C++ standard namespaces.
+Scope resolution operator ::
+
+
+A successful main funtion will always return 0

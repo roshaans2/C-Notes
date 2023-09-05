@@ -1,0 +1,496 @@
+Protected - 
+
+Accessible from base class itself
+Accessible from classes derived from Base
+Not accessible by objects of Base or Derived.
+
+
+
+Public Inheritance:
+In public inheritance, the public members of the base class become public members of the derived class. The protected members of the base class become protected members of the derived class. However, the private members of the base class remain inaccessible from the derived class.
+
+
+class Base {
+public:
+    int publicMember;
+    
+protected:
+    int protectedMember;
+    
+private:
+    int privateMember;
+};
+
+class Derived : public Base {
+    // publicMember and protectedMember are inherited as they are
+    // privateMember is inaccessible here
+public:
+    void accessBaseMembers() {
+        publicMember = 1;        // Accessible
+        protectedMember = 2;     // Accessible
+        // privateMember = 3;    // Not accessible
+    }
+};
+
+int main() {
+    Derived derived;
+    derived.publicMember = 10;     // Accessible
+    // derived.protectedMember = 20; // Not accessible
+    // derived.privateMember = 30;   // Not accessible
+    return 0;
+}
+
+
+Protected Inheritance:
+In protected inheritance, the public and protected members of the base class become protected members of the derived class. private members of the base class remain inaccessible from the derived class.
+
+class Base {
+public:
+    int publicMember;
+    
+protected:
+    int protectedMember;
+    
+private:
+    int privateMember;
+};
+
+class Derived : protected Base {
+    // publicMember and protectedMember are inherited as protected
+    // privateMember is inaccessible here
+public:
+    void accessBaseMembers() {
+        publicMember = 1;        // Accessible
+        protectedMember = 2;     // Accessible
+        // privateMember = 3;    // Not accessible
+    }
+};
+
+int main() {
+    Derived derived;
+    // derived.publicMember = 10;     // Not accessible
+    // derived.protectedMember = 20;  // Not accessible
+    // derived.privateMember = 30;    // Not accessible
+    return 0;
+}
+
+Private Inheritance:
+In private inheritance, the public and protected members of the base class become private members of the derived class. private members of the base class remain inaccessible from the derived class.
+
+class Base {
+public:
+    int publicMember;
+    
+protected:
+    int protectedMember;
+    
+private:
+    int privateMember;
+};
+
+class Derived : private Base {
+    // publicMember and protectedMember are inherited as private
+    // privateMember is inaccessible here
+public:
+    void accessBaseMembers() {
+        publicMember = 1;        // Accessible
+        protectedMember = 2;     // Accessible
+        // privateMember = 3;    // Not accessible
+    }
+};
+
+int main() {
+    Derived derived;
+    // derived.publicMember = 10;     // Not accessible
+    // derived.protectedMember = 20;  // Not accessible
+    // derived.privateMember = 30;    // Not accessible
+    return 0;
+}
+
+
+Constructors - 
+
+When a Derived object is created,
+Base class constructor executes then Derived class constructor executes.
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+       Base(){
+           cout<<"Base class constructor"<<endl;
+       }
+};
+
+class Derived:public Base{
+    public:
+        Derived(){
+            cout<<"Derived class constructor"<<endl;
+        }
+};
+
+int main(){
+    Derived d;
+}
+
+Output:
+
+Base class constructor
+Derived class constructor
+
+Destructors - 
+
+Class destructors are invoked in reverse order as constructors.
+Derived class destructor is called before base class destructor.
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+       Base(){
+           cout<<"Base class constructor"<<endl;
+       }
+       ~Base(){
+           cout<<"Base class destructor"<<endl;
+       }
+};
+
+class Derived:public Base{
+    public:
+        Derived(){
+            cout<<"Derived class constructor"<<endl;
+        }
+        ~Derived(){
+            cout<<"Derived class destructor"<<endl;
+        }
+};
+
+int main(){
+    Base b;
+    Derived d;
+    
+}
+Output - 
+
+Base class constructor
+Base class constructor
+Derived class constructor
+Derived class destructor
+Base class destructor
+Base class destructor
+
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    public:
+      Base(){
+          cout<<"Base class constructor"<<endl;
+      }
+       Base(int x){
+           cout<<"Value:"<<x<<endl;
+       }
+};
+
+class Derived:public Base{
+    public:
+        Derived(){
+            cout<<"Derived class constructor"<<endl;
+        }
+        Derived(int x){
+            cout<<x*2<<endl;
+        }
+};
+
+int main(){
+    Base c{2};
+    Derived e{2};
+    
+}
+
+Value:2
+Base class constructor
+4
+
+
+#include<iostream>
+using namespace std;
+
+class Animal{
+    public:
+        Animal(){
+            cout<<"Animal"<<endl;
+        }
+        Animal(int x){
+            cout<<"Animal:"<<x<<endl;
+        }
+};
+
+class Dog:public Animal{
+    public:
+        Dog(){
+            cout<<"Dog barks"<<endl;
+        }
+        Dog(int x){
+            cout<<"Dog:"<<x<<endl;
+        }
+};
+
+int main(){
+    Dog d{2};
+}
+
+
+Animal
+Dog:2
+
+
+How can we control exactly which base class constructor is used during initialization?
+
+#include<iostream>
+using namespace std;
+
+class Base{
+    private:
+        int value;
+    public:
+        Base(){
+            value = 0;
+            cout<<"Base default constructor"<<endl;
+        }    
+        Base(int x){
+            value = x;
+            cout<<"Base parameterized constructor"<<endl;
+        }
+};
+
+class Derived:public Base{
+    private:
+        int doubled_value;
+    public:
+        Derived(){
+            Base();
+            doubled_value = 0;
+            cout<<"Derived default constructor"<<endl;
+        }
+        Derived(int x){
+            Base{x};
+            doubled_value = x*2;
+            cout<<"Derived parameterized constructor"<<endl;
+        }
+};
+
+int main(){
+    Base b1;
+    Base b2{100};
+    Derived d1;
+    Derived d2{100};
+}
+
+
+Base default constructor
+Base parameterized constructor
+Base default constructor
+Base default constructor
+Derived default constructor
+Base default constructor
+Base parameterized constructor
+Derived parameterized constructor
+
+
+
+Constructors are special member functions in a class that are automatically called when an object of the class is created. They initialize the object's data members and allocate necessary resources.
+
+Destructors are special member functions in a class that are automatically called when an object goes out of scope or is explicitly deleted. They are used to release resources and perform cleanup operations.
+
+Destructors are automatically called when an object goes out of scope or is explicitly deleted using the delete operator.
+
+Constructors are often used for resource allocation (e.g., memory allocation, opening files).
+Destructors are used for resource deallocation and cleanup (e.g., freeing memory, closing files).
+
+
+Constructor Chaining - 
+
+#include <iostream>
+
+class Shape {
+private:
+    double width;
+    double height;
+
+public:
+    // Delegated constructor
+    Shape(double w, double h) : width(w), height(h) {
+        std::cout << "Shape constructor with parameters called." << std::endl;
+    }
+
+    // Delegating constructor that calls the delegated constructor
+    Shape(double side) : Shape(side, side) {
+        std::cout << "Shape constructor with one parameter called." << std::endl;
+    }
+
+    // Default constructor
+    Shape() : Shape(0.0, 0.0) {
+        std::cout << "Default Shape constructor called." << std::endl;
+    }
+
+    void display() {
+        std::cout << "Width: " << width << ", Height: " << height << std::endl;
+    }
+};
+
+int main() {
+    Shape square(5.0); // Calls the constructor with one parameter
+    square.display();
+
+    Shape rectangle(4.0, 6.0); // Calls the constructor with two parameters
+    rectangle.display();
+
+    Shape empty; // Calls the default constructor
+    empty.display();
+
+    return 0;
+}
+
+Copy constructor - 
+
+A copy constructor in C++ is a special constructor that is used to create a new object as a copy of an existing object of the same class.
+It is called when you create a new object and initialize it with an existing object of the same class. 
+The copy constructor typically takes one parameter, which is a reference to the object to be copied.
+The primary purpose of a copy constructor is to create a copy of an object, ensuring that the new object has the same values for its data members as the original object.
+
+
+The copy constructor is automatically invoked in several situations:
+
+When you initialize a new object using an existing object of the same class.
+When you pass an object to a function by value (not by reference or pointer).
+When an object is returned from a function by value.
+
+If you don't provide a copy constructor for your class, the C++ compiler generates a default copy constructor, which performs a member-wise shallow copy. However, if your class contains dynamically allocated resources or if you need customized copying behavior, it's often necessary to define your own copy constructor.
+
+Shallow Copy vs Deep Copy - 
+
+If you don't provide a copy constructor for your class, the C++ compiler generates a default copy constructor for you.
+The default copy constructor performs a member-wise copy of the data members from the source object to the destination object. It essentially copies the values of each data member from the source object to the corresponding data member in the destination object.
+Shallow copy is a term used to describe the behavior of the default copy constructor or any copy operation that simply copies the values of pointers or data members from the source object to the destination object.
+
+Deep copy, on the other hand, involves creating entirely separate copies of the data and resources managed by the source object. It ensures that the destination object has its own distinct set of resources.
+Deep copy requires custom copy constructors or copy operations that explicitly allocate new memory or duplicate resources for the destination object.
+
+
+Object Arrays - 
+
+class Student {
+public:
+    int rollNumber;
+    std::string name;
+
+    Student() : rollNumber(0), name("") {} // Default constructor
+
+    Student(int roll, const std::string& n) : rollNumber(roll), name(n) {} // Parameterized constructor
+
+    void display() {
+        std::cout << "Roll Number: " << rollNumber << ", Name: " << name << std::endl;
+    }
+};
+
+int main() {
+    Student students[3]; // Array of Student objects with a size of 3
+
+    students[0] = Student(101, "Alice"); // Initializing individual elements
+    students[1] = Student(102, "Bob");
+    students[2] = Student(103, "Charlie");
+
+    for (int i = 0; i < 3; ++i) {
+        students[i].display(); // Accessing and displaying elements
+    }
+
+    return 0;
+}
+
+
+Passing Objects - 
+
+Pass by Value:
+
+When you pass an object by value, a copy of the object is made, and the function works with this copy. Any modifications made to the object within the function do not affect the original object.
+
+void modifyObjectByValue(MyClass obj) {
+    obj.setValue(42); // Modifies the copy of 'obj'
+}
+
+MyClass originalObj;
+modifyObjectByValue(originalObj); // Pass by value
+// 'originalObj' is not affected
+
+
+Pass by Reference:
+
+When you pass an object by reference, you work with the original object directly. Any modifications made to the object within the function affect the original object.
+
+void modifyObjectByReference(MyClass& obj) {
+    obj.setValue(42); // Modifies the original 'obj'
+}
+
+MyClass originalObj;
+modifyObjectByReference(originalObj); // Pass by reference
+// 'originalObj' is modified
+
+Pass by Const Reference:
+
+To prevent modification of the object within the function, you can pass it by const reference. This is useful when you want to ensure that the object remains unchanged.
+
+void useObjectByConstReference(const MyClass& obj) {
+    // Can read 'obj' but cannot modify it
+}
+
+MyClass originalObj;
+useObjectByConstReference(originalObj); // Pass by const reference
+
+
+Returning Objects from Functions:
+
+You can also return objects from functions. This is done by either returning the object by value or using move semantics (e.g., returning an std::unique_ptr).
+
+MyClass createObject() {
+    MyClass newObj;
+    // Initialize newObj
+    return newObj; // Return by value
+}
+
+MyClass newObj = createObject(); // Object returned from a function
+
+Pass by Pointer:
+
+You can also pass objects by pointers. This allows you to modify the object through the pointer, and you can use null pointers to indicate the absence of an object.
+
+void modifyObjectByPointer(MyClass* objPtr) {
+    if (objPtr != nullptr) {
+        objPtr->setValue(42); // Modifies the object through the pointer
+    }
+}
+
+MyClass originalObj;
+MyClass* objPtr = &originalObj;
+modifyObjectByPointer(objPtr); // Pass by pointer
+
+
+References - 
+
+A reference in C++ is an alias or alternative name for an existing object.
+It provides an additional way to access an object's data and manipulate it indirectly.
+
+int x = 10;
+int& refX = x; // 'refX' is a reference to 'x'
+
+refX = 20;    // Modifying 'x' indirectly through 'refX'
+std::cout << x; // Outputs: 20
+
+
+
+
+
+

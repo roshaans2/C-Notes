@@ -1,0 +1,89 @@
+Generic programming with Macros - 
+
+
+#define MAX(a,b) ((a>b) ? a:b)
+
+cout<<MAX(10,20)   //20
+cout<<MAX(2.4,3.5) //3.5
+cout<<MAX('A','C') //C
+
+Generic Function with Function Templates - 
+
+#include<iostream>
+using namespace std;
+
+template<typename T>
+T maximum(T a,T b){
+    return (a>b)?a:b;
+}
+
+
+int main(){
+    int a = 5;
+    int b = 3;
+    cout<<maximum<int>(a,b);
+}
+
+output - 
+5
+
+#include<iostream>
+using namespace std;
+
+template<typename T1,typename T2>
+
+void func(T1 a,T2 b){
+    cout<<a<<" "<<b;
+}
+
+int main(){
+    int n = 5;
+    char c = 'S';
+    func<int,char>(n,c);
+}
+
+output - 
+
+5 S
+
+
+#include<iostream>
+using namespace std;
+template<typename T>
+T findYounger(T a,T b){
+    return (a<b)?a:b;
+}
+
+class Person{
+    public:
+        string name;
+        int age;
+        Person(int a,string n){
+            age = a;
+            name = n;
+        }
+        bool operator<(const Person &p){
+            return age<p.age;
+        }
+};
+
+int main(){
+    Person p1 {21,"Ashok"};
+    Person p2 {27,"Deepak"};
+    
+    Person p3 = findYounger(p1,p2);
+    cout<<p3.name<<" is younger.";
+}
+
+
+output - 
+
+Ashok is younger.
+
+
+Generic Programming with class templates - 
+
+
+
+
+

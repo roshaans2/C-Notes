@@ -1,0 +1,416 @@
+Procedural Program:
+
+Programs are typically collection of functions.
+
+Class is a user-defined data-type that has attributes, methods, and hide this attributes and methods. It is a blueprint from which objects are created.
+
+Objects are created from a class. It represents a specific instance of class.
+
+Creating a pointer to object - 
+
+Player *enemy = new Player();
+delete enemy;
+
+Intializing class variables inside class -- 
+
+class Player {
+   string name {"Player"};
+   int health {100};
+   int xp {3};
+}
+
+
+Account *frank_account = new Account();
+
+(*frank_account).balance;
+(*frank_account).deposit(1000.00);
+
+
+or
+
+
+Account *frank_account = new Account();
+frank_account->balance;
+frank_account->deposit(1000.00);
+
+ 
+Implementing Member Methods - 
+
+Inside class declaration - 
+
+class Account {
+   private:
+        double balance;
+   public:
+        void set_balance(double bal){
+            balance = bal;
+        }
+        double get_balance(){
+            return balance;
+        }
+}
+
+
+Outside class declaration - 
+
+void Account::set_balance(double bal){
+    balance = bal;
+}
+double Account::get_balance(){
+    return balance;
+}
+
+Using Header Files - 
+
+#ifndef __DOG_H__
+#define __DOG_H__
+#include <string>
+using namespace std;
+
+class Dog {
+private:
+    string name;
+    int age;
+public:
+
+    string get_name() {return name; }
+    void set_name(string n) {name = n; }
+    int get_age() {return age; }
+    void set_age(int a) { age = a;}
+    //---- WRITE YOUR CLASS FUNCTIONS BELOW THIS LINE----
+
+    
+    //---- WRITE YOUR CLASS FUNCTIONS ABOVE THIS LINE----
+};
+#endif 
+
+Constructors - 
+
+Invoked during object creation
+Can be overloaded
+Special member method
+
+Class Player{
+   private:
+     string name;
+     int health;
+     int xp;
+  public:
+     //Overloaded Constructors
+     Player();
+     Player(string name);
+     Player(string name,int health,int xp);
+}
+
+
+Destructor - 
+Invoked automatically when an object is destroyed.
+No parameters
+Only one destructor is allowed and cannot be overloaded.
+
+~Player();
+
+Player *enemy = new Player("Enemy",1000,0);
+delete enemy; //Destructor called
+
+Default Constructor - 
+
+If you write no constructors at all for a class, C++ will generate default constructor that does nothing
+
+Player frank;
+Player *enemy = new Player;
+
+
+class Account{
+   private:
+      string name;
+      double balance;
+   public:
+      Account(string name_val,dobule bal){
+           name = name_val;
+           balance = bal;
+      }
+      bool withdraw(double amount);
+      bool deposit(double amount);
+};
+
+int main(){
+    Account frank_account; //Error
+    Account jim_account; //Error
+    Account *marry_account = new Account; //Error
+
+    Account bill_account{"Bill",15000.0}; //OK
+}
+
+
+Initialization lists
+
+Player::Player()
+   :name{"None"},health{0},xp{0}{
+}
+
+Player::Player(string name_val)
+    :name{name_val},health{0},xp{0}{
+}
+
+Player::Player(string name_val,int health_val,int xp_val)
+    :name{name_val},health{health_val},xp{xp_val}{
+}
+
+Constuctor with default Parameter - 
+
+class Player{
+    private:
+        string name;
+        int health;
+        int xp;
+    public:
+        Player(string name_val="None",int health_val = 0,int xp_val = 0);
+};
+
+int main(){
+    Player empty; //None,0,0
+    Player frank {"Frank"}; //Frank,0,0
+    Player villain {"Villain",100,55}; //Villain,100,55
+    Player hero {"Hero",100,0}; //Hero,100,0
+}
+
+
+
+#include<iostream>
+using namespace std;
+
+class Details{
+  private:
+    string name;
+    int age;
+  public:
+    Details(string n,int a){
+        name = n;
+        age = a;
+    }
+    void getDetails(){
+        cout<<name<<endl;
+        cout<<age<<endl;
+    }
+    
+    Details(Details &d){
+        name = d.name;
+        age = d.age;
+    }
+    
+};
+
+
+
+
+int main(){
+    Details d{"Ram",53};
+    d.getDetails();
+    Details e(d);
+    e.getDetails();
+}
+
+
+Shallow Copy - Just copy the pointer. Only pointer is copied and not what it is 
+
+class Shallow{
+    private:
+        int *data;
+    public:
+        Shallow(int d){
+            data = new int;
+            *data = d;
+        }
+        Shallow(Shallow &source){
+           data = source.data;
+        }
+        ~Shallow(){
+           delete data;
+           cout<<"Destructor freeing data"<<endl;
+        }
+}
+Deep Copy - Copy the data pointed by the pointer. It creates new storage and copies values.
+
+class Deep{
+    private:
+       int *data;
+    public:
+       Deep(int d){
+         data = new int;
+         *data = d;
+       }
+       Deep(Deep &source){
+          data = new int;
+          *data = *source.data;
+       }
+       ~Deep(){
+          delete data;
+          cout<<"Destructor freeing data";
+       }
+}
+
+this pointer - 
+
+this is a reserved keyword
+Can only be used in class scope
+All member access is done via the this pointer
+
+Using const with classes
+
+const Player villain {"Villain",100,55};
+
+villain is a const object so it's attributes cannot change
+
+villain.set_name("Nice guy"); //Error
+villain.get_name(); //Error
+The above statement will also give error. The compiler assumes that the function changes the object so it gives error.
+
+Below lines of code solves this,
+
+class Player{
+   private:
+   
+   public:
+      string get_name() const;
+};
+
+const Player villain {"Villain",100,55};
+villain.set_name("Nice guy"); //Error
+villain.get_name(); //OK
+
+However it gives error of code inside get_name() function modifies object.
+
+Static class Members - 
+
+Class data members can be declared as static
+Class functions can be declared as static
+
+
+class Player{
+    private:
+        static int num_players;
+        string name;
+        int health;
+        int xp;
+    public:
+        static int get_num_players(){
+             return num_players;
+        }
+        Player(string name_val,int health_val,int xp_val){
+             name = name_val;
+             health = health_val;
+             xp = xp_val;
+             ++num_players;
+        }
+        ~Player(){
+             --num_players;
+        }
+};
+
+int Player::num_players = 0;
+int main(){
+    get_num_players();
+    Player obj1 {"Frank"};
+    get_num_players();
+}
+
+
+Friend - 
+
+A function or class that has access to private class member. And the function or class is not a member of the class it is accessing.
+
+
+
+
+// C++ Program to demonstrate the
+// functioning of a friend class
+#include <iostream>
+using namespace std;
+ 
+class GFG {
+private:
+    int private_variable;
+ 
+protected:
+    int protected_variable;
+ 
+public:
+    GFG()
+    {
+        private_variable = 10;
+        protected_variable = 99;
+    }
+ 
+    // friend class declaration
+    friend class F;
+};
+ 
+// Here, class F is declared as a
+// friend inside class GFG. Therefore,
+// F is a friend of class GFG. Class F
+// can access the private members of
+// class GFG.
+class F {
+public:
+    void display(GFG& t)
+    {
+        cout << "The value of Private Variable = "
+             << t.private_variable << endl;
+        cout << "The value of Protected Variable = "
+             << t.protected_variable;
+    }
+};
+ 
+// Driver code
+int main()
+{
+    GFG g;
+    F fri;
+    fri.display(g);
+    return 0;
+}
+
+
+
+#include <iostream>
+using namespace std;
+ 
+class base {
+private:
+    int private_variable;
+ 
+protected:
+    int protected_variable;
+ 
+public:
+    base()
+    {
+        private_variable = 10;
+        protected_variable = 99;
+    }
+     
+      // friend function declaration
+    friend void friendFunction(base& obj);
+};
+ 
+ 
+// friend function definition
+void friendFunction(base& obj)
+{
+    cout << "Private Variable: " << obj.private_variable
+         << endl;
+    cout << "Protected Variable: " << obj.protected_variable;
+}
+ 
+// driver code
+int main()
+{
+    base object1;
+    friendFunction(object1);
+ 
+    return 0;
+}
+
+
+
